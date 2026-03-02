@@ -12,7 +12,10 @@ export const App: React.FC = () => {
 
   const fetchGoods = (callback: GetGoodsFunction) => {
     callback()
-      .then(setGoods)
+      .then(goodsFromServer => {
+        setGoods(goodsFromServer);
+        setIsError(false);
+      })
       .catch(() => {
         setIsError(true);
         setErrorMessage('Do not successfully fetch goods');
