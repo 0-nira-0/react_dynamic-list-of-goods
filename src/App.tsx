@@ -7,8 +7,17 @@ import { getAll, get5First, getRedGoods, GetGoodsFunction } from './api/goods';
 
 export const App: React.FC = () => {
   const [goods, setGoods] = useState<Good[] | null>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isError, setIsError] = useState(false);
 
-  const fetchGoods = (callback: GetGoodsFunction) => callback().then(setGoods);
+  const fetchGoods = (callback: GetGoodsFunction) => {
+    callback()
+      .then(setGoods)
+      .catch(() => {
+        setIsError(true);
+        setErrorMessage('Do not successfully fetch goods');
+      });
+  };
 
   return (
     <div className="App">
@@ -38,7 +47,13 @@ export const App: React.FC = () => {
         Load red goods
       </button>
 
-      <GoodsList goods={goods} />
+      {isError ? (
+        <div className="error-message">
+          <p>{errorMessage}</p>
+        </div>
+      ) : (
+        <GoodsList goods={goods} />
+      )}
     </div>
   );
 };
